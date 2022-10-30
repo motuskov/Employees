@@ -1,4 +1,5 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 
 class EmployeePosition(models.Model):
     '''
@@ -16,24 +17,27 @@ class EmployeePosition(models.Model):
     def __str__(self):
         return self.title
 
-class Department(models.Model):
+class Department(MPTTModel):
     '''
     The Department object represents a department of a compony.
 
     Attributes:
         name (models.CharField): Name of a department
-        parent_department (models.ForeignKey): Superior department (if exists)
+        parent (TreeForeignKey): Superior department (if exists)
     '''
     name = models.CharField(
         max_length=100
     )
-    parent_department = models.ForeignKey(
+    parent = TreeForeignKey(
         'self',
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name='child_departments'
+        related_name='children'
     )
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def __str__(self):
         return self.name

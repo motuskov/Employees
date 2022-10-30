@@ -1,1 +1,2 @@
 Django==3.2.16
+django-mptt==0.14.0
