@@ -22,6 +22,7 @@ import mainapp.views as mainapp
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', mainapp.MainView.as_view(), name='main'),
+    path('employee_list/', mainapp.EmployeeListView.as_view(), name='employee_list'),
 ]
 
 if settings.DEBUG:
