@@ -1,0 +1,15 @@
+.btn-toggle[aria-expanded="true"] img {
+    transform: rotate(90deg);
+}
+
+.btn-department:hover {
+    background-color: #d2f4ea;
+}
+
+.btn-department:focus {
+    background-color: #d2f4ea;
+}
+
+.btn-department {
+    margin-left: 14px;
+}
