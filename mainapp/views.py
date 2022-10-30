@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.views import View
+from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.http import Http404
 from .models import *
@@ -18,24 +18,40 @@ class MainView(TemplateView):
 
         return context
 
-class EmployeeListView(View):
+class EmployeeListView(ListView):
     '''
     The EmployeeListView objects renders employee lists of departments.
+
+    Attributes:
+        department(models.Department): department for which the list of
+    employees is requested
     '''
-    def get(self, request, *args, **kwargs):
+    template_name = 'mainapp/ajax/employee_list.html'
+    paginate_by = 3
+
+    def dispatch(self, request, *args, **kwargs):
         # Look for requesting Department object
         try:
             department_pk = int(request.GET.get('department'))
         except ValueError:
             raise Http404('Primary key format error')
-        department = get_object_or_404(
+        self.department = get_object_or_404(
             Department,
             pk=department_pk
         )
 
-        # Create context for rendering employee list
-        context = {
-            'employees': department.employees.all()
-        }
+        return super().dispatch(request, *args, **kwargs)
 
-        return render(request, 'mainapp/ajax/employee_list.html', context)
+    def get_queryset(self):
+        # Get employees of requested department and all descendants
+        departments = self.department.get_descendants(include_self=True)
+        employees = Employee.objects.filter(department__in=departments)
+
+        return employees
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['department'] = self.department
+
+        return context
