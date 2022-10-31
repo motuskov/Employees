@@ -27,7 +27,7 @@ class EmployeeListView(ListView):
     employees is requested
     '''
     template_name = 'mainapp/ajax/employee_list.html'
-    paginate_by = 3
+    paginate_by = 10
 
     def dispatch(self, request, *args, **kwargs):
         # Look for requesting Department object
