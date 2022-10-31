@@ -22,7 +22,8 @@
             {% endif %}
             <button type="button"
                     class="btn btn-sm btn-department border-0 {% if not node.is_leaf_node %}ms-0{% endif %}"
-                    onClick="$( '#employee-list' ).load( 'employee_list/', 'department={{ node.pk }}' );">
+                    onClick="update_employee_list( {{ node.pk }} );"
+                    id="btn-department-{{ node.pk }}">
               {{ node.name }}
             </button>
             {% if not node.is_leaf_node %}
@@ -34,7 +35,19 @@
         {% endrecursetree %}
       </ul>
     </div>
-    <div class="col-8 p-2" id="employee-list">
+    <div class="col-8 p-2">
+      <div class="sticky-top">
+        <h2>Employees</h2>
+        <hr>
+        <div class="alert alert-danger"
+             role="alert"
+             id="employee-list-alert"
+             style="display: none;">
+          Something went wrong!
+        </div>
+        <div id="employee-list">
+        </div>
+      </div>
     </div>
   </div>
 {% endblock %}
